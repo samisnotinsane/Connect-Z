@@ -30,7 +30,7 @@ f.close()
 print('[OUT] Loading completed!')
 
 print('[DEBUG] dimension (x,y,z): (' + dimension[0] + ',' + dimension[1] + ',' + dimension[2] + ')')
-print('[DEBUG] moves:' + str(moves))
+print('[DEBUG] total moves:' + str(moves))
 
 # A game is illegal if z is greater than x, y or both
 if dimension[2] > dimension[0] or dimension[2] > dimension[1]:
@@ -51,10 +51,24 @@ class Board:
         for row in range(self.y):
             self.matrix[row] = [0] * self.x
     
+    def print_matrix(self):
+        print('---BOARD_MATRIX---' + '\n')
+        for row in range(len(self.matrix)):
+            print(' | ' + str(self.matrix[row]) + ' | ' + '\n')
+            # pass
+        print('------------------')
+        return '' # Avoid printing 'None' in stdio
+
+    def print_list(self):
+        print('---BOARD_LIST---')
+        print(self.matrix)
+        print('----------------')
+        return '' # Avoid printing 'None' in stdio
+
     # Inserts a token down a specified column.
     #   Lack of token in board is marked by '0'
     #   Presence of token is marked by '1'.
-    def insert(self, column):
+    def insert(self, column, var):
         totalRowCount = len(self.matrix)
         currentRow = 0
         for row in range(totalRowCount):
@@ -63,13 +77,13 @@ class Board:
                 # We're now at the last row of selected column
                 if self.matrix[row][column-1] == 0:
                     # Last row value was 0
-                    self.matrix[row][column-1] = 1
+                    self.matrix[row][column-1] = var
                 elif self.matrix[row][column-1] == 1:
                     # Last row value was 1
                     # Check for 0, bottom to top
                     for reverseRowPtr in range(totalRowCount-2, -1, -1):
                         if self.matrix[reverseRowPtr][column-1] == 0:
-                            self.matrix[reverseRowPtr][column-1] = 1
+                            self.matrix[reverseRowPtr][column-1] = var
             currentRow += 1
             
             
@@ -82,11 +96,26 @@ totalRowCount = len(b.matrix)
 
 # test_moves = [1,1,1]
 # print('[DEBUG] test_moves:' + str(test_moves))
-
+moveIndex = 0
 # Play out the moves.
-for move in moves:
-    b.insert( column= int(move) ) 
+for move in range(len(moves)):
+    print('[DEBUG] board state:')
+    print(b.print_list())
+    print(b.print_matrix())
+    remMoves = moves[moveIndex:len(moves)]
+    print('[DEBUG] moves remaining: ' + str(remMoves))
+    moveIndex += 1
 
-print('[DEBUG] board state:' + str(b.matrix))
+    if (move % 2) == 0:
+        # This is a move made by player one.
+        print('[DEBUG] player \'A\' drops in column ' + str(moves[move]))
+        b.insert(column=int(moves[move]), var=1)
+    if (move % 2) == 1:
+        # This move is by player two.
+        print('[DEBUG] player \'B\' drops in column ' + str(moves[move]))        
+        b.insert(column=int(moves[move]), var=2)
+    
+
+# print('[DEBUG] board state:' + str(b.matrix))
 
 print('----------------------------')
