@@ -1,47 +1,9 @@
 import sys
 
-print('ConnectZ - 2018 Sameen Islam')
-print('----------------------------')
-
-argList = sys.argv
-print('[DEBUG] args supplied: ' + str(len(argList)))
-print('[DEBUG] args:' + str(argList))
-
-# Show error msg then exit if no data file name or too many args given.
-if len(argList) < 2 or len(argList) > 2:
-    print('connectz.py: Provide one input file')
-    sys.exit(-1)
-
-print('[OUT] Loading, please wait...')
-
-# Read config file and parse data.
-f = open(argList[1], "r")
-
-gameConfigRaw = f.readline()
-# Get rid of whitespace following readline
-gameConfig = gameConfigRaw.strip() 
-dimension = gameConfig.split() # 0,1,2 -> x,y,z
-moves = []
-for line in f:
-    strippedLine = line.strip()
-    moves.append(strippedLine)
-f.close()
-
-print('[OUT] Loading completed!')
-
-print('[DEBUG] dimension (x,y,z): (' + dimension[0] + ',' + dimension[1] + ',' + dimension[2] + ')')
-print('[DEBUG] total moves:' + str(moves))
-
-# A game is illegal if z is greater than x, y or both
-if dimension[2] > dimension[0] or dimension[2] > dimension[1]:
-    print('[OUT] ' + str(7))
-
+# Represents a connect-z board.
 class Board:
     # x: width, y: height, z: min to win
-    def __init__(self, x, y, z):
-        self.x = int(x)
-        self.y = int(y)
-        self.z = int(z)
+    def __init__(self,):
         self.matrix = [] # board will be represented with a matrix
     
     # Creates a blank board using matrix representation
@@ -50,7 +12,26 @@ class Board:
         self.matrix = [0] * self.x
         for row in range(self.y):
             self.matrix[row] = [0] * self.x
-    
+
+    # Open file from specified path and parse data into Board object.
+    def load_file(self, path):
+        # Read config file and parse data.
+        f = open(path, "r")
+
+        gameConfigRaw = f.readline()
+        # Get rid of whitespace following readline
+        gameConfig = gameConfigRaw.strip() 
+        dimension = gameConfig.split() # 0,1,2 -> x,y,z
+        self.x = int(dimension[0])
+        self.y = int(dimension[1])
+        self.z = int(dimension[2])
+        moves = []
+        for line in f:
+            strippedLine = line.strip()
+            moves.append(strippedLine)
+        f.close()
+        return moves
+
     def print_matrix(self):
         print('---BOARD_MATRIX---' + '\n')
         for row in range(len(self.matrix)):
@@ -86,11 +67,32 @@ class Board:
                             self.matrix[reverseRowPtr][column-1] = var
                             break
             currentRow += 1
-            
-            
+                        
+# -----------------------------------------------------
 
-b = Board(dimension[0], dimension[1], dimension[2])
+print('ConnectZ - 2018 Sameen Islam')
+print('----------------------------')
+
+argList = sys.argv
+print('[DEBUG] args supplied: ' + str(len(argList)))
+print('[DEBUG] args:' + str(argList))
+
+# Show error msg then exit if no data file name or too many args given.
+if len(argList) < 2 or len(argList) > 2:
+    print('connectz.py: Provide one input file')
+    sys.exit(-1)
+
+print('[DEBUG] Loading, please wait...')
+b = Board()
+moves = b.load_file(argList[1])
 b.init_board()
+print('[DEBUG] Loading completed!')
+print('[DEBUG] dimension (x,y,z): (' + str(b.x) + ',' + str(b.y) + ',' + str(b.z) + ')')
+print('[DEBUG] total moves:' + str(moves))
+
+# A game is illegal if z is greater than x, y or both
+if b.z > b.x or b.z > b.y:
+    print('[OUT] ' + str(7))
 
 totalRowCount = len(b.matrix)
 # print('[DEBUG] totalRowCount:' + str(totalRowCount))
