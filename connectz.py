@@ -78,12 +78,13 @@ class Board:
                 if self.matrix[row][column-1] == 0:
                     # Last row value was 0
                     self.matrix[row][column-1] = var
-                elif self.matrix[row][column-1] == 1:
+                elif self.matrix[row][column-1] == 1 or self.matrix[row][column-1] == 2:
                     # Last row value was 1
                     # Check for 0, bottom to top
                     for reverseRowPtr in range(totalRowCount-2, -1, -1):
                         if self.matrix[reverseRowPtr][column-1] == 0:
                             self.matrix[reverseRowPtr][column-1] = var
+                            break
             currentRow += 1
             
             
@@ -99,13 +100,9 @@ totalRowCount = len(b.matrix)
 moveIndex = 0
 # Play out the moves.
 for move in range(len(moves)):
-    print('[DEBUG] board state:')
-    print(b.print_list())
-    print(b.print_matrix())
     remMoves = moves[moveIndex:len(moves)]
     print('[DEBUG] moves remaining: ' + str(remMoves))
-    moveIndex += 1
-
+    
     if (move % 2) == 0:
         # This is a move made by player one.
         print('[DEBUG] player \'A\' drops in column ' + str(moves[move]))
@@ -114,6 +111,13 @@ for move in range(len(moves)):
         # This move is by player two.
         print('[DEBUG] player \'B\' drops in column ' + str(moves[move]))        
         b.insert(column=int(moves[move]), var=2)
+    
+    print('[DEBUG] move #:' + str(moveIndex))
+    print('[DEBUG] board state:')
+    print(b.print_list())
+    print(b.print_matrix())
+    
+    moveIndex += 1
     
 
 # print('[DEBUG] board state:' + str(b.matrix))
