@@ -4,6 +4,9 @@ import sys
 class Board:
     # x: width, y: height, z: min to win
     def __init__(self,):
+        self.x = -1
+        self.y = -1
+        self.z = -1
         self.matrix = [] # board will be represented with a matrix
     
     # Creates a blank board using matrix representation
@@ -25,12 +28,12 @@ class Board:
         self.x = int(dimension[0])
         self.y = int(dimension[1])
         self.z = int(dimension[2])
-        moves = []
+        m = []
         for line in f:
             strippedLine = line.strip()
-            moves.append(strippedLine)
+            m.append(strippedLine)
         f.close()
-        return moves
+        return m
 
     def print_matrix(self):
         print('---BOARD_MATRIX---' + '\n')
@@ -67,60 +70,53 @@ class Board:
                             self.matrix[reverseRowPtr][column-1] = var
                             break
             currentRow += 1
-                        
+    
+    def play_moves(self, moves):
+        moveIndex = 0
+        # Play out the moves.
+        for move in range(len(moves)):
+            print('[DEBUG] move #: ' + str(moveIndex))
+            remMoves = moves[moveIndex:len(moves)]
+            print('[DEBUG] moves remaining: ' + str(remMoves)) 
+            if (move % 2) == 0:
+                # This is a move made by player one.
+                print('[DEBUG] player \'A\' drops in column ' + str(moves[move]))
+                b.insert(column=int(moves[move]), var=1)
+            if (move % 2) == 1:
+                # This move is by player two.
+                print('[DEBUG] player \'B\' drops in column ' + str(moves[move]))
+                b.insert(column=int(moves[move]), var=2)
+            print('[DEBUG] board state:')
+            # print(b.print_list())
+            print(b.print_matrix())
+            moveIndex += 1
+
 # -----------------------------------------------------
 
-print('ConnectZ - 2018 Sameen Islam')
+print('Connect Z - 2018')
+print('Author: Sameen Islam')
 print('----------------------------')
 
 argList = sys.argv
-print('[DEBUG] args supplied: ' + str(len(argList)))
-print('[DEBUG] args:' + str(argList))
-
+print('[DEBUG] checking game: ' + str(argList[1]))
 # Show error msg then exit if no data file name or too many args given.
 if len(argList) < 2 or len(argList) > 2:
     print('connectz.py: Provide one input file')
     sys.exit(-1)
 
-print('[DEBUG] Loading, please wait...')
+print('[DEBUG] loading, please wait...')
 b = Board()
 moves = b.load_file(argList[1])
 b.init_board()
-print('[DEBUG] Loading completed!')
+print('[DEBUG] loading complete!')
+
 print('[DEBUG] dimension (x,y,z): (' + str(b.x) + ',' + str(b.y) + ',' + str(b.z) + ')')
-print('[DEBUG] total moves:' + str(moves))
 
 # A game is illegal if z is greater than x, y or both
 if b.z > b.x or b.z > b.y:
     print('[OUT] ' + str(7))
 
-totalRowCount = len(b.matrix)
-# print('[DEBUG] totalRowCount:' + str(totalRowCount))
-
-# test_moves = [1,1,1]
-# print('[DEBUG] test_moves:' + str(test_moves))
-moveIndex = 0
-# Play out the moves.
-for move in range(len(moves)):
-    remMoves = moves[moveIndex:len(moves)]
-    print('[DEBUG] moves remaining: ' + str(remMoves))
-    
-    if (move % 2) == 0:
-        # This is a move made by player one.
-        print('[DEBUG] player \'A\' drops in column ' + str(moves[move]))
-        b.insert(column=int(moves[move]), var=1)
-    if (move % 2) == 1:
-        # This move is by player two.
-        print('[DEBUG] player \'B\' drops in column ' + str(moves[move]))        
-        b.insert(column=int(moves[move]), var=2)
-    
-    print('[DEBUG] move #:' + str(moveIndex))
-    print('[DEBUG] board state:')
-    print(b.print_list())
-    print(b.print_matrix())
-    
-    moveIndex += 1
-    
+b.play_moves(moves)
 
 # print('[DEBUG] board state:' + str(b.matrix))
 
