@@ -25,9 +25,14 @@ class Board:
         # Get rid of whitespace following readline
         gameConfig = gameConfigRaw.strip() 
         dimension = gameConfig.split() # 0,1,2 -> x,y,z
-        self.x = int(dimension[0])
-        self.y = int(dimension[1])
-        self.z = int(dimension[2])
+        try:
+            self.x = int(dimension[0])
+            self.y = int(dimension[1])
+            self.z = int(dimension[2])
+        except ValueError:
+            print('[OUT] ' + str(8))
+            exit()
+        
         m = []
         for line in f:
             strippedLine = line.strip()
