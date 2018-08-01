@@ -58,6 +58,9 @@ class Board:
     def insert(self, column, var):
         totalRowCount = len(self.matrix)
         currentRow = 0
+        if column > len(self.matrix[0]):
+            print('[OUT] ' + str(6)) # Illegal column
+            exit()
         for row in range(totalRowCount):
             # Insert if last row and 0
             if row == totalRowCount-1:
@@ -68,10 +71,16 @@ class Board:
                 elif self.matrix[row][column-1] == 1 or self.matrix[row][column-1] == 2:
                     # Last row value was 1
                     # Check for 0, bottom to top
+                    placeFound = False
+                    # Decrement from next row up (2nd last row).
                     for reverseRowPtr in range(totalRowCount-2, -1, -1):
                         if self.matrix[reverseRowPtr][column-1] == 0:
                             self.matrix[reverseRowPtr][column-1] = var
+                            placeFound = True
                             break
+                    if not placeFound:
+                        print('[OUT] ' + str(5)) # Illegal row
+                        exit()
             currentRow += 1
 
     def play_moves(self, moves):
