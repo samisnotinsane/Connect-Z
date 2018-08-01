@@ -19,7 +19,11 @@ class Board:
     # Open file from specified path and parse data into Board object.
     def load_file(self, path):
         # Read config file and parse data.
-        f = open(path, "r")
+        try:
+            f = open(path, "r")
+        except FileNotFoundError:
+            print('[OUT] ' + str(9))
+            exit()
         gameConfigRaw = f.readline()
         # Get rid of whitespace following readline
         gameConfig = gameConfigRaw.strip() 
