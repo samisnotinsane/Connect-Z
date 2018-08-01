@@ -71,27 +71,33 @@ class Board:
                             break
             currentRow += 1
 
-    def verticalCheck(self, row, col):
-        zInARow = False
-        consecutiveCount = 0
-        for i in range(row, self.y):
-            if self.matrix[row][col] == self.matrix[i][col]:
-                consecutiveCount += 1
-            else:
-                break
-            if consecutiveCount >= self.z:
-                zInARow = True
-                if self.matrix[row][col] == 1:
-                    print('p1 wins on vertical, col: ' + str(col+1))
-                elif self.matrix[row][col] == 2:
-                    print('p2 wins on vertical, col: ' + str(col+1))
-                return zInARow
+    def play_moves(self, moves):
+        moveIndex = 0
+        # Play out the moves.
+        for move in range(len(moves)):
+            print('[DEBUG] move #: ' + str(moveIndex))
+            remMoves = moves[moveIndex:len(moves)]
+            print('[DEBUG] moves remaining: ' + str(remMoves)) 
+            if (move % 2) == 0:
+                # This is a move made by player one.
+                print('[DEBUG] player \'A\' drops in column ' + str(moves[move]))
+                b.insert(column=int(moves[move]), var=1)
+            if (move % 2) == 1:
+                # This move is by player two.
+                print('[DEBUG] player \'B\' drops in column ' + str(moves[move]))
+                b.insert(column=int(moves[move]), var=2)
+            print('[DEBUG] board state:')
+            # print(b.print_list())
+            print(b.print_matrix())
+            moveIndex += 1
 
+    # Check horizontally
     def horizontalCheck(self, row, col):
         threeInARow = False
         consecutiveCount = 0
+
         # From starting position to end of row...
-        for j in range(col, self.x):
+        for j in range(col, 3):
             if self.matrix[row][col] == self.matrix[row][j]:
                 consecutiveCount += 1
             else:
@@ -103,7 +109,26 @@ class Board:
                 elif self.matrix[row][col] == 2:
                     print('p2 wins on horizontal, row: ' + str(row+1))
                 return threeInARow
-    
+
+    # Check vertically
+    def verticalCheck(self, row, col):
+        threeInARow = False
+        consecutiveCount = 0
+
+        for i in range(row, 3):
+            if self.matrix[row][col] == self.matrix[i][col]:
+                consecutiveCount += 1
+            else:
+                break
+            if consecutiveCount >= 3:
+                threeInARow = True
+                if self.matrix[row][col] == 1:
+                    print('p1 wins on vertical, col: ' + str(col+1))
+                elif self.matrix[row][col] == 2:
+                    print('p2 wins on vertical, col: ' + str(col+1))
+                return threeInARow
+
+    # Check diagonally
     def diagonalCheck(self, row, col):
         print('row: ' + str(row) + ', col: ' + str(col))
         threeInARow = False
@@ -113,9 +138,9 @@ class Board:
         consecutiveCount = 0
         j = col
         print('scanning positive slope...')
-        for i in range(row, self.x):
+        for i in range(row, 3):
             print('i: ' + str(i) + ', j: ' + str(j))
-            if j >= self.y:
+            if j >= 3:
                 break
             elif self.matrix[row][col] == self.matrix[i][j]:
                 consecutiveCount += 1
@@ -136,7 +161,7 @@ class Board:
         j = col
         print('scanning negative slope...')
         for i in range(row, -1, -1):
-            if j >= self.y:
+            if j >= 3:
                 break
             elif self.matrix[row][col] == self.matrix[i][j]:
                 consecutiveCount += 1
@@ -161,45 +186,26 @@ class Board:
             slope = 'both'
         return threeInARow, slope
 
+    # Check if there's a 3-in-a-row in the board
     def checkForZ(self):
         # For each counter in the board...
         for i in range(self.y): # col elems
             for j in range(self.x): # row elems
-                # We only check for z-in-a-row starting at (i,j)
+                # We only check for 3-in-a-row starting at (i,j)
                 if self.matrix[i][j] != 0:
-                    if verticalCheck(i, j):
+                    if self.verticalCheck(i, j):
                         finished = True
                         print('vertical match!')
                         break
-                    if horizontalCheck(i, j):
+                    if self.horizontalCheck(i, j):
                         finished = True
                         print('horizontal match!')
                         break
-                    diag_threes, slope = diagonalCheck(i, j)
+                    diag_threes, slope = self.diagonalCheck(i, j)
                     if diag_threes:
                         print('checkForZ/slope: ' + slope)
                         finished = True
                         break
-    
-    def play_moves(self, moves):
-        moveIndex = 0
-        # Play out the moves.
-        for move in range(len(moves)):
-            print('[DEBUG] move #: ' + str(moveIndex))
-            remMoves = moves[moveIndex:len(moves)]
-            print('[DEBUG] moves remaining: ' + str(remMoves)) 
-            if (move % 2) == 0:
-                # This is a move made by player one.
-                print('[DEBUG] player \'A\' drops in column ' + str(moves[move]))
-                b.insert(column=int(moves[move]), var=1)
-            if (move % 2) == 1:
-                # This move is by player two.
-                print('[DEBUG] player \'B\' drops in column ' + str(moves[move]))
-                b.insert(column=int(moves[move]), var=2)
-            print('[DEBUG] board state:')
-            # print(b.print_list())
-            print(b.print_matrix())
-            moveIndex += 1
 
 # -----------------------------------------------------
 
