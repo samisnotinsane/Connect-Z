@@ -22,8 +22,8 @@ class Board:
         try:
             f = open(path, "r")
         except FileNotFoundError:
-            print('[OUT] ' + str(9))
-            exit()
+            print(str(9))
+            exit(9)
         gameConfigRaw = f.readline()
         # Get rid of whitespace following readline
         gameConfig = gameConfigRaw.strip() 
@@ -33,8 +33,8 @@ class Board:
             self.y = int(dimension[1])
             self.z = int(dimension[2])
         except ValueError:
-            print('[OUT] ' + str(8))
-            exit()
+            print(str(8))
+            exit(8)
         m = []
         for line in f:
             strippedLine = line.strip()
@@ -42,6 +42,7 @@ class Board:
         f.close()
         return m
 
+    # Debug method for visualising board as a matrix.
     def print_matrix(self):
         print('---BOARD_MATRIX---' + '\n')
         for row in range(len(self.matrix)):
@@ -50,6 +51,7 @@ class Board:
         print('------------------')
         return '' # Avoid printing 'None' in stdio
 
+    # Debug method for visualising board as a list.
     def print_list(self):
         print('---BOARD_LIST---')
         print(self.matrix)
@@ -63,8 +65,8 @@ class Board:
         totalRowCount = len(self.matrix)
         currentRow = 0
         if column > len(self.matrix[0]):
-            print('[OUT] ' + str(6)) # Illegal column
-            exit()
+            print(str(6)) # Illegal column
+            exit(6)
         for row in range(totalRowCount):
             # Insert if last row and 0
             if row == totalRowCount-1:
@@ -83,28 +85,28 @@ class Board:
                             placeFound = True
                             break
                     if not placeFound:
-                        print('[OUT] ' + str(5)) # Illegal row
-                        exit()
+                        print(str(5)) # Illegal row
+                        exit(5)
             currentRow += 1
 
     def play_moves(self, moves):
         moveIndex = 0
         # Play out the moves.
         for move in range(len(moves)):
-            print('[DEBUG] move #: ' + str(moveIndex))
+            # print('[DEBUG] move #: ' + str(moveIndex))
             remMoves = moves[moveIndex:len(moves)]
-            print('[DEBUG] moves remaining: ' + str(remMoves)) 
+            # print('[DEBUG] moves remaining: ' + str(remMoves)) 
             if (move % 2) == 0:
                 # This is a move made by player one.
-                print('[DEBUG] player \'A\' drops in column ' + str(moves[move]))
+                # print('[DEBUG] player \'A\' drops in column ' + str(moves[move]))
                 b.insert(column=int(moves[move]), var=1)
             if (move % 2) == 1:
                 # This move is by player two.
-                print('[DEBUG] player \'B\' drops in column ' + str(moves[move]))
+                # print('[DEBUG] player \'B\' drops in column ' + str(moves[move]))
                 b.insert(column=int(moves[move]), var=2)
-            print('[DEBUG] board state:')
+            # print('[DEBUG] board state:')
             # print(b.print_list())
-            print(b.print_matrix())
+            # print(b.print_matrix())
             moveIndex += 1
 
     def horizontalCheck(self, row, col):
@@ -219,21 +221,21 @@ class Board:
                         win = True
                         winPlayer = player
                         winCount += 1
-                        print('vertical match!')
+                        # print('vertical match!')
                         break
                     horizWin, player = self.horizontalCheck(i, j)
                     if horizWin:
                         win = True
                         winPlayer = player
                         winCount += 1
-                        print('horizontal match!')
+                        # print('horizontal match!')
                         break
                     diagWin, player = self.diagonalCheck(i, j)
                     if diagWin:
                         win = True
                         winPlayer = player
                         winCount += 1
-                        print('diagonal match!')
+                        # print('diagonal match!')
                         break
         if winCount > 1:
             # Draw
@@ -243,39 +245,39 @@ class Board:
 
 # -----------------------------------------------------
 
-print('Connect Z - 2018')
-print('Author: Sameen Islam')
-print('----------------------------')
+# print('Connect Z - 2018')
+# print('Author: Sameen Islam')
+# print('----------------------------')
 
 argList = sys.argv
-print('[DEBUG] checking game: ' + str(argList[1]))
+# print('[DEBUG] checking game: ' + str(argList[1]))
 # Show error msg then exit if no data file name or too many args given.
 if len(argList) < 2 or len(argList) > 2:
     print('connectz.py: Provide one input file')
     sys.exit(-1)
 
-print('[DEBUG] loading, please wait...')
+# print('[DEBUG] loading, please wait...')
 b = Board()
 moves = b.load_file(argList[1])
 b.init_board()
-print('[DEBUG] loading complete!')
+# print('[DEBUG] loading complete!')
 
-print('[DEBUG] dimension (x,y,z): (' + str(b.x) + ',' + str(b.y) + ',' + str(b.z) + ')')
+# print('[DEBUG] dimension (x,y,z): (' + str(b.x) + ',' + str(b.y) + ',' + str(b.z) + ')')
 
 # A game is illegal if z is greater than x, y or both
 if b.z > b.x or b.z > b.y:
-    print('[OUT] ' + str(7))
+    print(str(7)) # Illegal game
 
 b.play_moves(moves)
 win, player = b.checkForZ()
-print('win:' + str(win))
+# print('win:' + str(win))
 if not win:
     for row in range(len(b.matrix)):
         if 0 in b.matrix[row]:
-            print('[OUT] ' + str(3)) # Incomplete game
-            exit()
-    print('[OUT] ' + str(0)) # Draw
+            print(str(3)) # Incomplete game
+            exit(3)
+    print(str(0)) # Draw
 else:
-    print('[OUT]' + str(player))
+    print(str(player))
 
-print('----------------------------')
+# print('----------------------------')
