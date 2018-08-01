@@ -20,7 +20,6 @@ class Board:
     def load_file(self, path):
         # Read config file and parse data.
         f = open(path, "r")
-
         gameConfigRaw = f.readline()
         # Get rid of whitespace following readline
         gameConfig = gameConfigRaw.strip() 
@@ -32,7 +31,6 @@ class Board:
         except ValueError:
             print('[OUT] ' + str(8))
             exit()
-        
         m = []
         for line in f:
             strippedLine = line.strip()
@@ -259,7 +257,11 @@ b.play_moves(moves)
 win, player = b.checkForZ()
 print('win:' + str(win))
 if not win:
-    print('[OUT] ' + str(0))
+    for row in range(len(b.matrix)):
+        if 0 in b.matrix[row]:
+            print('[OUT] ' + str(3)) # Incomplete game
+            exit()
+    print('[OUT] ' + str(0)) # Draw
 else:
     print('[OUT]' + str(player))
 
