@@ -70,6 +70,116 @@ class Board:
                             self.matrix[reverseRowPtr][column-1] = var
                             break
             currentRow += 1
+
+    def verticalCheck(self, row, col):
+        zInARow = False
+        consecutiveCount = 0
+        for i in range(row, self.y):
+            if self.matrix[row][col] == self.matrix[i][col]:
+                consecutiveCount += 1
+            else:
+                break
+            if consecutiveCount >= self.z:
+                zInARow = True
+                if self.matrix[row][col] == 1:
+                    print('p1 wins on vertical, col: ' + str(col+1))
+                elif self.matrix[row][col] == 2:
+                    print('p2 wins on vertical, col: ' + str(col+1))
+                return zInARow
+
+    def horizontalCheck(self, row, col):
+        threeInARow = False
+        consecutiveCount = 0
+        # From starting position to end of row...
+        for j in range(col, self.x):
+            if self.matrix[row][col] == self.matrix[row][j]:
+                consecutiveCount += 1
+            else:
+                break
+            if consecutiveCount >= 3:
+                threeInARow = True
+                if self.matrix[row][col] == 1:
+                    print('p1 wins on horizontal, row: ' + str(row+1))
+                elif self.matrix[row][col] == 2:
+                    print('p2 wins on horizontal, row: ' + str(row+1))
+                return threeInARow
+    
+    def diagonalCheck(self, row, col):
+        print('row: ' + str(row) + ', col: ' + str(col))
+        threeInARow = False
+        count = 0
+        slope = None
+
+        consecutiveCount = 0
+        j = col
+        print('scanning positive slope...')
+        for i in range(row, self.x):
+            print('i: ' + str(i) + ', j: ' + str(j))
+            if j >= self.y:
+                break
+            elif self.matrix[row][col] == self.matrix[i][j]:
+                consecutiveCount += 1
+            else:
+                break
+            # Move along 1 col, 1 row to essentially move 1 down diagonally
+            j += 1
+
+        if consecutiveCount >= 3:
+            count += 1 
+            slope = 'positive'
+            if self.matrix[row][col] == 1:
+                print('p1 wins on diagonal, slope: ' + slope)
+            elif self.matrix[row][col] == 2:
+                print('p2 wins on diagonal, slope: ' + slope)
+        
+        consecutiveCount = 0
+        j = col
+        print('scanning negative slope...')
+        for i in range(row, -1, -1):
+            if j >= self.y:
+                break
+            elif self.matrix[row][col] == self.matrix[i][j]:
+                consecutiveCount += 1
+            else:
+                break
+            # Move along 1 col, -1 row to essentially move 1 up diagonally
+            j += 1
+
+        if consecutiveCount >= 3:
+            count += 1
+            slope = 'negative'
+            if self.matrix[row][col] == 1:
+                print('p1 wins on diagonal!')
+            elif self.matrix[row][col] == 2:
+                print('p2 wins on diagonal!')
+        
+        if count > 0:
+            print('count (>): ' + str(count))
+            threeInARow = True
+        if count == 2:
+            print('count (==): ' + str(count))
+            slope = 'both'
+        return threeInARow, slope
+
+    def checkForZ(self):
+        # For each counter in the board...
+        for i in range(self.y): # col elems
+            for j in range(self.x): # row elems
+                # We only check for z-in-a-row starting at (i,j)
+                if self.matrix[i][j] != 0:
+                    if verticalCheck(i, j):
+                        finished = True
+                        print('vertical match!')
+                        break
+                    if horizontalCheck(i, j):
+                        finished = True
+                        print('horizontal match!')
+                        break
+                    diag_threes, slope = diagonalCheck(i, j)
+                    if diag_threes:
+                        print('checkForZ/slope: ' + slope)
+                        finished = True
+                        break
     
     def play_moves(self, moves):
         moveIndex = 0
@@ -117,6 +227,7 @@ if b.z > b.x or b.z > b.y:
     print('[OUT] ' + str(7))
 
 b.play_moves(moves)
+b.checkForZ()
 
 # print('[DEBUG] board state:' + str(b.matrix))
 
