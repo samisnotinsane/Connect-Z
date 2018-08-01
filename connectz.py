@@ -51,7 +51,7 @@ class Board:
 
     # Inserts a token down a specified column.
     #   Lack of token in board is marked by '0'
-    #   Presence of token is marked by '1'.
+    #   Presence of token is marked by '1' or '2' depending on player.
     def insert(self, column, var):
         totalRowCount = len(self.matrix)
         currentRow = 0
@@ -91,11 +91,10 @@ class Board:
             print(b.print_matrix())
             moveIndex += 1
 
-    # Check horizontally
     def horizontalCheck(self, row, col):
-        threeInARow = False
+        zInARow = False
         consecutiveCount = 0
-
+        player = 0
         # From starting position to end of row...
         for j in range(col, 3):
             if self.matrix[row][col] == self.matrix[row][j]:
@@ -103,42 +102,46 @@ class Board:
             else:
                 break
             if consecutiveCount >= 3:
-                threeInARow = True
+                zInARow = True
                 if self.matrix[row][col] == 1:
-                    print('p1 wins on horizontal, row: ' + str(row+1))
+                    # print('p1 wins on horizontal, row: ' + str(row+1))
+                    player = 1
                 elif self.matrix[row][col] == 2:
-                    print('p2 wins on horizontal, row: ' + str(row+1))
-                return threeInARow
+                    # print('p2 wins on horizontal, row: ' + str(row+1))
+                    player = 2
+        return zInARow, player
 
     def verticalCheck(self, row, col):
-        threeInARow = False
+        zInARow = False
         consecutiveCount = 0
-
-        for i in range(row, 3):
+        player = 0
+        for i in range(row, self.y):
             if self.matrix[row][col] == self.matrix[i][col]:
                 consecutiveCount += 1
             else:
                 break
-            if consecutiveCount >= 3:
-                threeInARow = True
+            if consecutiveCount >= self.z:
+                zInARow = True
                 if self.matrix[row][col] == 1:
-                    print('p1 wins on vertical, col: ' + str(col+1))
+                    player = 1
+                    # print('p1 wins on vertical, col: ' + str(col+1))
                 elif self.matrix[row][col] == 2:
-                    print('p2 wins on vertical, col: ' + str(col+1))
-                return threeInARow
+                    player = 2
+                    # print('p2 wins on vertical, col: ' + str(col+1))
+        return zInARow, player
 
     def diagonalCheck(self, row, col):
-        print('row: ' + str(row) + ', col: ' + str(col))
-        threeInARow = False
+        # print('row: ' + str(row) + ', col: ' + str(col))
+        zInARow = False
         count = 0
-        slope = None
-
+        # slope = None
+        player = 0
         consecutiveCount = 0
         j = col
-        print('scanning positive slope...')
-        for i in range(row, 3):
-            print('i: ' + str(i) + ', j: ' + str(j))
-            if j >= 3:
+        # print('scanning positive slope...')
+        for i in range(row, self.x):
+            # print('i: ' + str(i) + ', j: ' + str(j))
+            if j >= self.y:
                 break
             elif self.matrix[row][col] == self.matrix[i][j]:
                 consecutiveCount += 1
@@ -146,20 +149,20 @@ class Board:
                 break
             # Move along 1 col, 1 row to essentially move 1 down diagonally
             j += 1
-
-        if consecutiveCount >= 3:
+        if consecutiveCount >= self.z:
             count += 1 
-            slope = 'positive'
+            # slope = 'positive'
             if self.matrix[row][col] == 1:
-                print('p1 wins on diagonal, slope: ' + slope)
+                # print('p1 wins on diagonal, slope: ' + slope)
+                player = 1
             elif self.matrix[row][col] == 2:
-                print('p2 wins on diagonal, slope: ' + slope)
-        
+                # print('p2 wins on diagonal, slope: ' + slope)
+                player = 2
         consecutiveCount = 0
         j = col
-        print('scanning negative slope...')
+        # print('scanning negative slope...')
         for i in range(row, -1, -1):
-            if j >= 3:
+            if j >= self.y:
                 break
             elif self.matrix[row][col] == self.matrix[i][j]:
                 consecutiveCount += 1
@@ -167,43 +170,60 @@ class Board:
                 break
             # Move along 1 col, -1 row to essentially move 1 up diagonally
             j += 1
-
         if consecutiveCount >= 3:
             count += 1
-            slope = 'negative'
+            # slope = 'negative'
             if self.matrix[row][col] == 1:
-                print('p1 wins on diagonal!')
+                # print('p1 wins on diagonal!')
+                player = 1
             elif self.matrix[row][col] == 2:
-                print('p2 wins on diagonal!')
-        
+                # print('p2 wins on diagonal!')
+                player = 2
         if count > 0:
-            print('count (>): ' + str(count))
-            threeInARow = True
-        if count == 2:
-            print('count (==): ' + str(count))
-            slope = 'both'
-        return threeInARow, slope
+            # print('count (>): ' + str(count))
+            zInARow = True
+        # if count == 2:
+            # print('count (==): ' + str(count))
+            # slope = 'both'
+            # player = 0
+        return zInARow, player
 
     # Check if there's a z-in-a-row in the board
     def checkForZ(self):
+        win = False
+        winPlayer = 0
+        winCount = 0
         # For each counter in the board...
         for i in range(self.y): # col elems
             for j in range(self.x): # row elems
                 # We only check for z-in-a-row starting at (i,j)
                 if self.matrix[i][j] != 0:
-                    if self.verticalCheck(i, j):
-                        finished = True
+                    vertWin, player = self.verticalCheck(i, j)
+                    if vertWin:
+                        win = True
+                        winPlayer = player
+                        winCount += 1
                         print('vertical match!')
                         break
-                    if self.horizontalCheck(i, j):
-                        finished = True
+                    horizWin, player = self.horizontalCheck(i, j)
+                    if horizWin:
+                        win = True
+                        winPlayer = player
+                        winCount += 1
                         print('horizontal match!')
                         break
-                    diag_threes, slope = self.diagonalCheck(i, j)
-                    if diag_threes:
-                        print('checkForZ/slope: ' + slope)
-                        finished = True
+                    diagWin, player = self.diagonalCheck(i, j)
+                    if diagWin:
+                        win = True
+                        winPlayer = player
+                        winCount += 1
+                        print('diagonal match!')
                         break
+        if winCount > 1:
+            # Draw
+            winPlayer = 0
+            win = False
+        return win, winPlayer
 
 # -----------------------------------------------------
 
@@ -231,8 +251,11 @@ if b.z > b.x or b.z > b.y:
     print('[OUT] ' + str(7))
 
 b.play_moves(moves)
-b.checkForZ()
-
-# print('[DEBUG] board state:' + str(b.matrix))
+win, player = b.checkForZ()
+print('win:' + str(win))
+if not win:
+    print('[OUT] ' + str(0))
+else:
+    print('[OUT]' + str(player))
 
 print('----------------------------')
