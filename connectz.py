@@ -110,7 +110,6 @@ class Board:
                     print('p2 wins on horizontal, row: ' + str(row+1))
                 return threeInARow
 
-    # Check vertically
     def verticalCheck(self, row, col):
         threeInARow = False
         consecutiveCount = 0
@@ -128,7 +127,6 @@ class Board:
                     print('p2 wins on vertical, col: ' + str(col+1))
                 return threeInARow
 
-    # Check diagonally
     def diagonalCheck(self, row, col):
         print('row: ' + str(row) + ', col: ' + str(col))
         threeInARow = False
@@ -186,12 +184,12 @@ class Board:
             slope = 'both'
         return threeInARow, slope
 
-    # Check if there's a 3-in-a-row in the board
+    # Check if there's a z-in-a-row in the board
     def checkForZ(self):
         # For each counter in the board...
         for i in range(self.y): # col elems
             for j in range(self.x): # row elems
-                # We only check for 3-in-a-row starting at (i,j)
+                # We only check for z-in-a-row starting at (i,j)
                 if self.matrix[i][j] != 0:
                     if self.verticalCheck(i, j):
                         finished = True
