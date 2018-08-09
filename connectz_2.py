@@ -52,7 +52,13 @@ class Grid:
     # Returns the number of columns in the grid.
     def num_cols(self):
         return len(self.rows[0])
-        
+    
+    # Returns the elements of specified column as a list.
+    def get_col(self, column_no):
+        lst_col = []
+        for i in range(self.num_rows()):
+            lst_col.append(self.rows[i][column_no])
+        return lst_col
 
 # Represents a game board containing a grid which may hold a token as 
 # an element.
@@ -73,9 +79,18 @@ class Board:
     def get_line_length(self):
         return self.line_length
 
-    def insert_token(self, colour, column_no):
-        pass
+    def get_next_empty_pos(self, column_no = None):
+        if (column_no == None):
+            raise ValueError('column_no cannot be \'None\'!')
+        if (column_no >= self.get_width()):
+            raise IndexError('column_no is out of bounds!')
+        return -1, -1
 
+    def drop_token(self, column_no = None, token = None):
+        row, col = get_next_empty_pos(column_no = 0)
+        if (token == None):
+            raise ValueError('token cannot be \'None\'!')
+        
     def check_winner(self, colour):
         pass
     

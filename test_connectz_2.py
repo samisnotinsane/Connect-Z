@@ -25,6 +25,12 @@ class GridTestSmall(unittest.TestCase):
         self.grid.set_item(2,1,25)
         self.assertEqual(self.grid.get_item(2,1), 25)
 
+    def test_get_col(self):
+        self.grid.set_item(0,0,1)
+        self.grid.set_item(1,0,4)
+        self.grid.set_item(2,0,7)
+        self.assertEqual(self.grid.get_col(0), [1,4,7])
+
 class BoardTest(unittest.TestCase):
     def setUp(self):
         x = 7 # Width
