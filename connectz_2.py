@@ -56,16 +56,26 @@ class Grid:
 
 # Represents a game board containing a grid which may hold a token as 
 # an element.
+# x represents the width of the board in columns.
+# y represents the height of the board in rows.
+# z represents the minimum no. of tokens in a straight line required to win the game.
 class Board:
     def __init__(self, x, y, z):
-        self.grid = []
-        self.width = x
-        self.height = y
+        self.grid = Grid(n_cols = x, n_rows = y)
         self.line_length = z
 
-    def insert_token(colour, column_no):
+    def get_width(self):
+        return self.grid.num_cols()
+
+    def get_height(self):
+        return self.grid.num_rows()
+
+    def get_line_length(self):
+        return self.line_length
+
+    def insert_token(self, colour, column_no):
         pass
 
-    def check_winner(colour):
+    def check_winner(self, colour):
         pass
     
