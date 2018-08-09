@@ -59,7 +59,7 @@ class Grid:
         for i in range(self.num_rows()):
             lst_col.append(self.rows[i][column_no])
         return lst_col
-
+    
 # Represents a game board containing a grid which may hold a token as 
 # an element.
 # x represents the width of the board in columns.
@@ -78,13 +78,21 @@ class Board:
 
     def get_line_length(self):
         return self.line_length
+    
+    def get_grid(self):
+        return self.grid
 
-    def get_next_empty_pos(self, column_no = None):
+    def get_next_empty_row_no(self, column_no = None):
         if (column_no == None):
             raise ValueError('column_no cannot be \'None\'!')
         if (column_no >= self.get_width()):
             raise IndexError('column_no is out of bounds!')
-        return -1, -1
+        lst_col = self.grid.get_col(column_no)
+        print(lst_col)
+        for i in range((len(lst_col)-1), -1, -1):
+            if(lst_col[i] == 0):
+                return i # return row_no
+        return -1 # empty row not found
 
     def drop_token(self, column_no = None, token = None):
         row, col = get_next_empty_pos(column_no = 0)

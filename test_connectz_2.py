@@ -34,8 +34,8 @@ class GridTestSmall(unittest.TestCase):
 class BoardTest(unittest.TestCase):
     def setUp(self):
         x = 7 # Width
-        y = 6 # Height
-        z = 4 # Line length
+        y = 3 # Height
+        z = 3 # Line length
         self.board = Board(x = x, y = y, z = z)
     
     def tearDown(self):
@@ -45,10 +45,28 @@ class BoardTest(unittest.TestCase):
         self.assertEqual(self.board.get_width(), 7)
 
     def test_get_height(self):
-        self.assertEqual(self.board.get_height(), 6)
+        self.assertEqual(self.board.get_height(), 3)
 
-    def test_line_length(self):
-        self.assertEqual(self.board.get_line_length(), 4)
+    def test_get_line_length(self):
+        self.assertEqual(self.board.get_line_length(), 3)
+
+    def test_get_next_empty_row_no_1(self):
+        grid = self.board.get_grid()
+        grid.set_item(row = 2, col = 0, val = 15)
+        grid.set_item(row = 1, col = 0, val = 8)
+        row_no = self.board.get_next_empty_row_no(column_no = 0)
+        self.assertEqual(row_no, 0)
+
+    def test_get_next_empty_row_no_2(self):
+        grid = self.board.get_grid()
+        row_no = self.board.get_next_empty_row_no(column_no = 1)
+        self.assertEqual(row_no, 2)
+
+    def test_get_next_empty_row_no_3(self):
+        grid = self.board.get_grid()
+        grid.set_item(row = 2, col = 2, val = 17)
+        row_no = self.board.get_next_empty_row_no(column_no = 2)
+        self.assertEqual(row_no, 1)
 
 # def suite():
 #     suite = unittest.TestSuite()
