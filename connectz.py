@@ -1,3 +1,6 @@
+# Author: ISLAM, Sameen
+# Published: 05/08/2018
+
 import sys
 
 # Represents a connect-z board.
