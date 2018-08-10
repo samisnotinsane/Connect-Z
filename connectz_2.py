@@ -80,6 +80,9 @@ class Grid:
             lst_col.append(self.rows[i][column_no])
         return lst_col
     
+    def get_row(self, row_no):
+        return self.rows[row_no]
+    
 # Represents a game board containing a grid which may hold a token as 
 # an element.
 # x represents the width of the board in columns.
@@ -136,32 +139,32 @@ class Board:
         match = False # Flag for tracking consecutive token matches.
         matches = 0 # No. of consecutive token matches.
         while(row < self.get_height() and row >= 0 and col < self.get_width() and col >= 0):
-            test = self.get_grid()[row][col]
-            if(test != token and match)
+            test = self.get_grid().get_item(row = row, col = col)
+            if(test != token and match):
                 break
-            elif(test == token):
+            if(test == token):
                 match = True
                 matches += 1
             row += delta_row
             col += delta_col
-        return matches == z
+        return matches == self.get_line_length()
         
     # Returns (True, player_no) if board grid contains a winner,
     # (False, -1) otherwise.
     def check_win(self, row, col, token, direction):
         if(direction == 'vertical'):
-            if(z(row = row, col = col, delta_row = -1, delta_col = 0)):
+            if(self.z(row = row, col = col, delta_row = -1, delta_col = 0, token = token)):
                 return True, token
         if(direction == 'horizontal'):
-            if(z(row = row, col = col, delta_row = 0, delta_col = 1)):
+            if(self.z(row = row, col = col, delta_row = 0, delta_col = 1, token = token)):
                 return True, token
         if(direction == 'diagonal_increasing_row'):
-            if(z(row = row, col = col, delta_row = 1, delta_col = 1)):
+            if(self.z(row = row, col = col, delta_row = 1, delta_col = 1, token = token)):
                 return True, token
         if(direction == 'diagonal_decreasing_row'):
-            if(z(row = row, col = col, delta_row = -1, delta_col = 1)):
+            if(self.z(row = row, col = col, delta_row = -1, delta_col = 1, token = token)):
                 return True, token
-        return false, -1
+        return False, -1
 
     # Returns True if board grid contains no winners,
     # False otherwise.
@@ -215,36 +218,67 @@ if __name__ == "__main__":
 
     # Each subsequent row in file is a single move, alternating between players.
     for line in f:
-        
+             
         # If the game was already won after previous move, terminate.
         if won:
             print(4) # Illegal continue
             exit(4)
 
-        move = line.strip()
+        # Subtract 1 to compensate for zero-based index.
+        col = line.strip() - 1 
 
         # Make a move:
         # ...odd line numbers are moves by player 1.
         if(line_index % 2 == 0):
             try:
-                board.drop_token(column_no = line_index, token = 1)
+                board.drop_token(column_no = col, token = 1)
+                # Index of row where token is located.
+                row = self.get_next_empty_row_no() + 1
+                # Check line length for winning combo.
+                won, player_no = board.check_win(row = row, col = col, token = 1, direction = 'vertical')
+                # Declare winner and terminate.
+                if won:
+                    print(player_no) # Game won
+                    break
+                won, player_no = board.check_win(row = row, col = col, token = 1, direction = 'horizontal')
+                if won:
+                    print(player_no) # Game won
+                    break
+                won, player_no = board.check_win(row = row, col = col, token = 1, direction = 'diagonal_increasing_row')
+                if won:
+                    print(player_no) # Game won
+                    break
+                won, player_no = board.check_win(row = row, col = col, token = 1, direction = 'diagonal_decreasing_row')
+                if won:
+                    print(player_no) # Game won
+                    break
             except (ValueError, IndexError) as e:
                 # Determine if illegal row or column.
                 print(e)
         # ...even line numbers are moves by player 2.
         if(line_index % 2 == 1):
             try:
-                board.drop_token(column_no = line_index, token = 1)
+                board.drop_token(column_no = col, token = 2)
+                row = self.get_next_empty_row_no() + 1
+                won, player_no = board.check_win(row = row, col = col, token = 2, direction = 'vertical')
+                if won:
+                    print(player_no) # Game won
+                    break
+                won, player_no = board.check_win(row = row, col = col, token = 2, direction = 'horizontal')
+                if won:
+                    print(player_no) # Game won
+                    break
+                won, player_no = board.check_win(row = row, col = col, token = 2, direction = 'diagonal_increasing_row')
+                if won:
+                    print(player_no) # Game won
+                    break
+                won, player_no = board.check_win(row = row, col = col, token = 2, direction = 'diagonal_decreasing_row')
+                if won:
+                    print(player_no) # Game won
+                    break
             except (ValueError, IndexError) as e:
                 # Determine if illegal row or column.
                 print(e)
-
-        # Check line length for winning combo.
-        won, player_no = board.check_win()
-
-        # Declare winner and terminate.
-        if won:
-            print(player_no) # Game won
         
         # Could be a number of reasons as to why there wasn't a winner:
         #   -Draw
@@ -254,7 +288,7 @@ if __name__ == "__main__":
             if not draw:
                 board.check_incomplete()
         line_index += 1
-
+    
     # Housekeeping.
     f.close()
     board = None

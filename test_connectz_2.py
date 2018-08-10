@@ -61,8 +61,8 @@ class GridSmallTest(unittest.TestCase):
 
 class BoardTest(unittest.TestCase):
     def setUp(self):
-        self.x = 7 # Width
-        self.y = 3 # Height
+        self.x = 7 # Width / Cols
+        self.y = 3 # Height / Rows
         self.z = 3 # Line length
         self.board = Board(x = self.x, y = self.y, z = self.z)
     
@@ -116,23 +116,42 @@ class BoardTest(unittest.TestCase):
             bottom_row.append(self.board.get_grid().get_item(row = self.y - 1, col = i))
         self.assertEqual(bottom_row, [1,2,1,2,1,2,1])
 
+    def test_z_horizontal(self):
+        self.board.drop_token(column_no = 0, token = 1)
+        self.board.drop_token(column_no = 1, token = 1)
+        self.board.drop_token(column_no = 2, token = 1)
+        row = self.board.get_next_empty_row_no(column_no = 0) + 1
+        col = 0
+        self.assertEqual(self.board.z(row = row, col = col, delta_row = 0, delta_col = 1, token = 1), True)
+
     def test_check_win_horizontal(self):
-        self.assertEqual(-1, 0)
+        self.board.drop_token(column_no = 0, token = 1)
+        self.board.drop_token(column_no = 1, token = 1)
+        self.board.drop_token(column_no = 2, token = 1)
+        row = self.board.get_next_empty_row_no(column_no = 0) + 1
+        col = 0
+        lst_row_contents = self.board.get_grid().get_row(row_no = row)
+        # print(lst_row_contents)
+        won, player_no = self.board.check_win(row = row, col = col, token = 1, direction = 'horizontal')
+        self.assertEqual(won, True)
 
     def test_check_win_vertical(self):
+        self.board.drop_token(column_no = 0, token = 1)
+        self.board.drop_token(column_no = 0, token = 1)
+        self.board.drop_token(column_no = 0, token = 1)
         self.assertEqual(-1, 0)
 
-    def test_check_win_diagonal_positive(self):
-        self.assertEqual(-1, 0)
+    # def test_check_win_diagonal_positive(self):
+    #     self.assertEqual(-1, 0)
 
-    def test_check_win_diagonal_negative(self):
-        self.assertEqual(-1, 0)
+    # def test_check_win_diagonal_negative(self):
+    #     self.assertEqual(-1, 0)
     
-    def test_check_draw(self):
-        self.assertEqual(-1, 0)
+    # def test_check_draw(self):
+    #     self.assertEqual(-1, 0)
 
-    def test_check_incomplete(self):
-        self.assertEqual(-1, 0)
+    # def test_check_incomplete(self):
+    #     self.assertEqual(-1, 0)
 
 # def suite():
 #     suite = unittest.TestSuite()
