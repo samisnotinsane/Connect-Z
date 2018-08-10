@@ -1,3 +1,5 @@
+import sys
+
 # Represents a red or yellow piece which is inserted 
 # into a column in the board.
 class Token:
@@ -123,6 +125,88 @@ class Board:
         # token.set_y_pos(column_no)
         self.grid.set_item(row = row_no, col = column_no, val = token)
 
-    def check_winner(self, colour):
-        pass
+    def check_win(self):
+        return false, -1
     
+# Entry point.
+if __name__ == "__main__":
+    
+    # Acquire cmd line args.
+    args = sys.argv
+    
+    # Show error msg then exit if no data file name or too many args given.
+    if len(args) < 2 or len(args) > 2:
+        print('connectz.py: Provide one input file')
+        sys.exit(-1)
+    
+    # Read game file.
+    try:
+        f = open(path, "r")
+    except FileNotFoundError:
+        print(str(9)) # File error.
+        exit(9)
+    
+    # Extract dimensions (x,y,z) from first line of file.
+    dimensions = f.readline().strip().split()
+    
+    # Illegal game cases:
+    #   -Line length is greater than width
+    #   -Line length is greater than height
+    if(dimensions[2] > dimensions[0]):
+        print(7) # Illegal game
+        exit(7) 
+    if(dimensions[2] > dimensions[1]):
+        print(7) # Illegal game
+        exit(7) 
+
+    # Initialise a game board.
+    board = Board(x = dimensions[0], y = dimensions[1], z = dimensions[2])
+    
+    # Track line number
+    line_index = 0 
+
+    # Track illegal continue attempts.
+    won = False
+
+    # Each subsequent row in file is a single move, alternating between players.
+    for line in f:
+        
+        # If the game was already won after previous move, terminate.
+        if won:
+            print(4) # Illegal continue
+            exit(4)
+
+        move = line.strip()
+
+        # Make a move:
+        # ...odd line numbers are moves by player 1.
+        if(line_index % 2 == 0):
+            try:
+                board.drop_token(column_no = , token = 1)
+            except (ValueError, IndexError) as e:
+                # Determine if illegal row or column.
+                print(e)
+        # ...even line numbers are moves by player 2.
+        if(line_index % 2 == 1):
+            try:
+                board.drop_token(column_no = , token = 1)
+            except (ValueError, IndexError) as e:
+                # Determine if illegal row or column.
+                print(e)
+
+        # Check line length for winning combo.
+        won, player_no = check_win()
+
+        # Declare winner and terminate.
+        if won:
+            print(player_no) # Game won
+        
+        # Could be a number of reasons as to why there wasn't a winner:
+        #   -Draw
+        #   -
+        elif not won:
+            pass
+        line_index += 1
+        
+    # Cleanup.
+    f.close()
