@@ -116,6 +116,24 @@ class BoardTest(unittest.TestCase):
             bottom_row.append(self.board.get_grid().get_item(row = self.y - 1, col = i))
         self.assertEqual(bottom_row, [1,2,1,2,1,2,1])
 
+    def test_check_win_horizontal(self):
+        self.assertEqual(-1, 0)
+
+    def test_check_win_vertical(self):
+        self.assertEqual(-1, 0)
+
+    def test_check_win_diagonal_positive(self):
+        self.assertEqual(-1, 0)
+
+    def test_check_win_diagonal_negative(self):
+        self.assertEqual(-1, 0)
+    
+    def test_check_draw(self):
+        self.assertEqual(-1, 0)
+
+    def test_check_incomplete(self):
+        self.assertEqual(-1, 0)
+
 # def suite():
 #     suite = unittest.TestSuite()
 #     suite.addTest(GridTestSmall('test_num_rows'))

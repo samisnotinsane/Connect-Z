@@ -124,9 +124,38 @@ class Board:
         # token.set_x_pos(row_no)
         # token.set_y_pos(column_no)
         self.grid.set_item(row = row_no, col = column_no, val = token)
+    
+    # Returns True if a z-in-a-row pattern was found in the board,
+    # False otherwise.
+    def z(self, row, col, delta_row, delta_col, token):
+        pass
 
-    def check_win(self):
+    # Returns (True, player_no) if board grid contains a winner,
+    # (False, -1) otherwise.
+    def check_win(self, row, col, token, direction):
+        if(direction == 'vertical'):
+            if(z(row = row, col = col, delta_row = -1, delta_col = 0)):
+                return True, token
+        if(direction == 'horizontal'):
+            if(z(row = row, col = col, delta_row = 0, delta_col = 1)):
+                return True, token
+        if(direction == 'diagonal_increasing_row'):
+            if(z(row = row, col = col, delta_row = 1, delta_col = 1)):
+                return True, token
+        if(direction == 'diagonal_decreasing_row'):
+            if(z(row = row, col = col, delta_row = -1, delta_col = 1)):
+                return True, token
         return false, -1
+
+    # Returns True if board grid contains no winners,
+    # False otherwise.
+    def check_draw(self):
+        return False
+    
+    # Returns True if board grid contains empty positions,
+    # False otherwise.
+    def check_incomplete(self):
+        return True
     
 # Entry point.
 if __name__ == "__main__":
@@ -182,20 +211,20 @@ if __name__ == "__main__":
         # ...odd line numbers are moves by player 1.
         if(line_index % 2 == 0):
             try:
-                board.drop_token(column_no = , token = 1)
+                board.drop_token(column_no = line_index, token = 1)
             except (ValueError, IndexError) as e:
                 # Determine if illegal row or column.
                 print(e)
         # ...even line numbers are moves by player 2.
         if(line_index % 2 == 1):
             try:
-                board.drop_token(column_no = , token = 1)
+                board.drop_token(column_no = line_index, token = 1)
             except (ValueError, IndexError) as e:
                 # Determine if illegal row or column.
                 print(e)
 
         # Check line length for winning combo.
-        won, player_no = check_win()
+        won, player_no = board.check_win()
 
         # Declare winner and terminate.
         if won:
@@ -203,10 +232,14 @@ if __name__ == "__main__":
         
         # Could be a number of reasons as to why there wasn't a winner:
         #   -Draw
-        #   -
+        #   -Incomplete
         elif not won:
-            pass
+            draw = board.check_draw()
+            if not draw:
+                board.check_incomplete()
         line_index += 1
-        
-    # Cleanup.
+
+    # Housekeeping.
     f.close()
+    board = None
+    exit(0)
