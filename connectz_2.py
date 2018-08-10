@@ -85,20 +85,25 @@ class Grid:
 # x represents the width of the board in columns.
 # y represents the height of the board in rows.
 # z represents the minimum no. of tokens in a straight line required to win the game.
+#   also referred to as a 'z-in-a-row'.
 class Board:
     def __init__(self, x, y, z):
         self.grid = Grid(n_cols = x, n_rows = y)
         self.line_length = z
 
+    # Returns x or the number of columns in the board.
     def get_width(self):
         return self.grid.num_cols()
 
+    # Returns y or the number of rows in the board.
     def get_height(self):
         return self.grid.num_rows()
 
     def get_line_length(self):
         return self.line_length
     
+    # Returns the internal grid representation for this board.
+    # See class 'Grid' for more.
     def get_grid(self):
         return self.grid
 
@@ -125,11 +130,22 @@ class Board:
         # token.set_y_pos(column_no)
         self.grid.set_item(row = row_no, col = column_no, val = token)
     
-    # Returns True if a z-in-a-row pattern was found in the board,
+    # Returns True if a 'z-in-a-row' was found in the board,
     # False otherwise.
     def z(self, row, col, delta_row, delta_col, token):
-        pass
-
+        match = False # Flag for tracking consecutive token matches.
+        matches = 0 # No. of consecutive token matches.
+        while(row < self.get_height() and row >= 0 and col < self.get_width() and col >= 0):
+            test = self.get_grid()[row][col]
+            if(test != token and match)
+                break
+            elif(test == token):
+                match = True
+                matches += 1
+            row += delta_row
+            col += delta_col
+        return matches == z
+        
     # Returns (True, player_no) if board grid contains a winner,
     # (False, -1) otherwise.
     def check_win(self, row, col, token, direction):
