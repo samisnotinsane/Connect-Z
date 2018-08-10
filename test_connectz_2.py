@@ -61,10 +61,10 @@ class GridSmallTest(unittest.TestCase):
 
 class BoardTest(unittest.TestCase):
     def setUp(self):
-        x = 7 # Width
-        y = 3 # Height
-        z = 3 # Line length
-        self.board = Board(x = x, y = y, z = z)
+        self.x = 7 # Width
+        self.y = 3 # Height
+        self.z = 3 # Line length
+        self.board = Board(x = self.x, y = self.y, z = self.z)
     
     def tearDown(self):
         self.board = None
@@ -96,7 +96,7 @@ class BoardTest(unittest.TestCase):
         row_no = self.board.get_next_empty_row_no(column_no = 2)
         self.assertEqual(row_no, 1)
 
-    def test_drop_token(self):
+    def test_drop_token_1(self):
         self.board.drop_token(column_no = 0, token = 1)
         row_no = self.board.get_next_empty_row_no(column_no = 0)
         self.board.drop_token(column_no = 0, token = 2)
@@ -104,6 +104,17 @@ class BoardTest(unittest.TestCase):
         self.board.drop_token(column_no = 0, token = 1)
         row_no = self.board.get_next_empty_row_no(column_no = 0)
         self.assertEqual(self.board.get_next_empty_row_no(column_no = 0), -1)
+
+    def test_drop_token_2(self):
+        for i in range(self.x):
+            if(i % 2 == 0):
+                self.board.drop_token(column_no = i, token = 1)
+            if(i % 2 == 1):    
+                self.board.drop_token(column_no = i, token = 2)
+        bottom_row = []
+        for i in range(self.x):
+            bottom_row.append(self.board.get_grid().get_item(row = self.y - 1, col = i))
+        self.assertEqual(bottom_row, [1,2,1,2,1,2,1])
 
 # def suite():
 #     suite = unittest.TestSuite()
