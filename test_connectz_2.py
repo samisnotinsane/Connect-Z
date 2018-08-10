@@ -1,7 +1,35 @@
 import unittest
 from connectz_2 import *
 
-class GridTestSmall(unittest.TestCase):
+class TokenTest(unittest.TestCase):
+    def setUp(self):
+        self.token_1 = Token()
+
+    def tearDown(self):
+        self.token_1 = None
+
+    def test_colour_empty(self):
+        self.assertEqual(self.token_1.get_colour(), None)
+
+    def test_x_pos_init(self):
+        self.assertEqual(self.token_1.get_x_pos(), -1)
+
+    def test_y_pos_init(self):
+        self.assertEqual(self.token_1.get_y_pos(), -1)
+
+    def test_colour_r(self):
+        self.token_1.set_colour('r')
+        self.assertEqual(self.token_1.get_colour(), 'r')
+    
+    def test_x_pos(self):
+        self.token_1.set_x_pos(2)
+        self.assertEqual(self.token_1.get_x_pos(), 2)
+    
+    def test_y_pos(self):
+        self.token_1.set_y_pos(4)
+        self.assertEqual(self.token_1.get_y_pos(), 4)
+
+class GridSmallTest(unittest.TestCase):
     def setUp(self):
         self.grid = Grid(3,3)
     
@@ -67,6 +95,15 @@ class BoardTest(unittest.TestCase):
         grid.set_item(row = 2, col = 2, val = 17)
         row_no = self.board.get_next_empty_row_no(column_no = 2)
         self.assertEqual(row_no, 1)
+
+    def test_drop_token(self):
+        self.board.drop_token(column_no = 0, token = 1)
+        row_no = self.board.get_next_empty_row_no(column_no = 0)
+        self.board.drop_token(column_no = 0, token = 2)
+        row_no = self.board.get_next_empty_row_no(column_no = 0)
+        self.board.drop_token(column_no = 0, token = 1)
+        row_no = self.board.get_next_empty_row_no(column_no = 0)
+        self.assertEqual(self.board.get_next_empty_row_no(column_no = 0), -1)
 
 # def suite():
 #     suite = unittest.TestSuite()
