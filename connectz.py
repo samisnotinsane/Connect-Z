@@ -1,32 +1,5 @@
 import sys
 
-# Represents a red or yellow piece which is inserted 
-# into a column in the board.
-class Token:
-    def __init__(self):
-        # (x_pos,y_pos) = (0,0) is the upper leftmost position on the board.
-        self.x_pos = -1 # Column no. in board.
-        self.y_pos = -1 # Row no. in board.
-        self.colour = None # Should be either red or yellow.
-    
-    def get_x_pos(self):
-        return self.x_pos
-
-    def get_y_pos(self):
-        return self.y_pos
-
-    def get_colour(self):
-        return self.colour
-
-    def set_x_pos(self, x_pos):
-        self.x_pos = x_pos
-    
-    def set_y_pos(self, y_pos):
-        self.y_pos = y_pos
-    
-    def set_colour(self, colour):
-        self.colour = colour
-
 # A grid is a collection of scalar values arranged in rows and columns 
 # as a matrix. The elements of the grid can be accessed by specifying 
 # a given row and column index with indices starting at 0.
