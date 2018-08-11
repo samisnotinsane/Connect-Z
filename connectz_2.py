@@ -152,11 +152,17 @@ class Board:
     # Returns (True, player_no) if board grid contains a winner,
     # (False, -1) otherwise.
     def check_win(self, row, col, token, direction):
-        if(direction == 'vertical'):
+        if(direction == 'vertical_up'):
             if(self.z(row = row, col = col, delta_row = -1, delta_col = 0, token = token)):
                 return True, token
-        if(direction == 'horizontal'):
+        if(direction == 'vertical_down'):
+            if(self.z(row = row, col = col, delta_row = 1, delta_col = 0, token = token)):
+                return True, token
+        if(direction == 'horizontal_right'):
             if(self.z(row = row, col = col, delta_row = 0, delta_col = 1, token = token)):
+                return True, token
+        if(direction == 'horizontal_left'):
+            if(self.z(row = row, col = col, delta_row = 0, delta_col = -1, token = token)):
                 return True, token
         if(direction == 'diagonal_increasing_row'):
             if(self.z(row = row, col = col, delta_row = 1, delta_col = 1, token = token)):

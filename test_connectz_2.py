@@ -116,7 +116,7 @@ class BoardTest(unittest.TestCase):
             bottom_row.append(self.board.get_grid().get_item(row = self.y - 1, col = i))
         self.assertEqual(bottom_row, [1,2,1,2,1,2,1])
 
-    def test_z_horizontal(self):
+    def test_z_horizontal_right(self):
         self.board.drop_token(column_no = 0, token = 1)
         self.board.drop_token(column_no = 1, token = 1)
         self.board.drop_token(column_no = 2, token = 1)
@@ -124,7 +124,7 @@ class BoardTest(unittest.TestCase):
         col = 0
         self.assertEqual(self.board.z(row = row, col = col, delta_row = 0, delta_col = 1, token = 1), True)
 
-    def test_check_win_horizontal(self):
+    def test_check_win_horizontal_right(self):
         self.board.drop_token(column_no = 0, token = 1)
         self.board.drop_token(column_no = 1, token = 1)
         self.board.drop_token(column_no = 2, token = 1)
@@ -132,17 +132,46 @@ class BoardTest(unittest.TestCase):
         col = 0
         lst_row_contents = self.board.get_grid().get_row(row_no = row)
         # print(lst_row_contents)
-        won, player_no = self.board.check_win(row = row, col = col, token = 1, direction = 'horizontal')
+        won, player_no = self.board.check_win(row = row, col = col, token = 1, direction = 'horizontal_right')
         self.assertEqual(won, True)
 
-    def test_check_win_vertical(self):
+    def test_check_win_vertical_down(self):
         self.board.drop_token(column_no = 0, token = 1)
         self.board.drop_token(column_no = 0, token = 1)
         self.board.drop_token(column_no = 0, token = 1)
-        self.assertEqual(-1, 0)
+        row = self.board.get_next_empty_row_no(column_no = 0) + 1
+        col = 0
+        won, player_no = self.board.check_win(row = row, col = col, token = 1, direction = 'vertical_down')
+        self.assertEqual(won, True)
 
-    # def test_check_win_diagonal_positive(self):
-    #     self.assertEqual(-1, 0)
+    def test_check_win_diagonal_decreasing_row(self):
+        self.board.drop_token(column_no = 0, token = 1)
+        self.board.drop_token(column_no = 1, token = 2)
+        self.board.drop_token(column_no = 1, token = 1)
+        self.board.drop_token(column_no = 2, token = 2)
+        self.board.drop_token(column_no = 2, token = 1)
+        self.board.drop_token(column_no = 3, token = 2)
+        self.board.drop_token(column_no = 2, token = 1)
+
+        row = self.board.get_height() - 1
+        col = 0
+        won, player_no = self.board.check_win(row = row, col = col, token = 1, direction = 'diagonal_decreasing_row')
+        
+        self.assertEqual(won, True)
+    
+    def test_check_win_diagonal_increasing_row(self):
+        self.board.drop_token(column_no = 0, token = 1)
+        self.board.drop_token(column_no = 0, token = 2)
+        self.board.drop_token(column_no = 0, token = 1)
+        self.board.drop_token(column_no = 1, token = 2)
+        self.board.drop_token(column_no = 1, token = 1)
+        self.board.drop_token(column_no = 2, token = 1)
+        row = self.board.get_next_empty_row_no(column_no = 0) + 1
+        col = 0
+        won, player_no = self.board.check_win(row = row, col = col, token = 1, direction = 'diagonal_increasing_row')
+
+        self.assertEqual(won, True)
+
 
     # def test_check_win_diagonal_negative(self):
     #     self.assertEqual(-1, 0)
