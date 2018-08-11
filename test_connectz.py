@@ -1,5 +1,5 @@
 import unittest
-from connectz_2 import *
+from connectz import *
 
 class TokenTest(unittest.TestCase):
     def setUp(self):
