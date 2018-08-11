@@ -143,18 +143,9 @@ class BoardTest(unittest.TestCase):
         won, player_no = self.board.check_win(row = row, col = col, token = 1, direction = 'diagonal_increasing_row')
 
         self.assertEqual(won, True)
-
-
-    # def test_check_win_diagonal_negative(self):
-    #     self.assertEqual(-1, 0)
     
-    # def test_check_draw(self):
-    #     self.assertEqual(-1, 0)
+    def test_check_draw(self):
+        self.assertEqual(self.board.check_draw(), True)
 
-    # def test_check_incomplete(self):
-    #     self.assertEqual(-1, 0)
-
-# def suite():
-#     suite = unittest.TestSuite()
-#     suite.addTest(GridTestSmall('test_num_rows'))
-#     return suite
+    def test_check_incomplete(self):
+        self.assertEqual(self.board.check_incomplete(), False)
