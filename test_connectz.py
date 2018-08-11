@@ -1,34 +1,6 @@
 import unittest
 from connectz import *
 
-class TokenTest(unittest.TestCase):
-    def setUp(self):
-        self.token_1 = Token()
-
-    def tearDown(self):
-        self.token_1 = None
-
-    def test_colour_empty(self):
-        self.assertEqual(self.token_1.get_colour(), None)
-
-    def test_x_pos_init(self):
-        self.assertEqual(self.token_1.get_x_pos(), -1)
-
-    def test_y_pos_init(self):
-        self.assertEqual(self.token_1.get_y_pos(), -1)
-
-    def test_colour_r(self):
-        self.token_1.set_colour('r')
-        self.assertEqual(self.token_1.get_colour(), 'r')
-    
-    def test_x_pos(self):
-        self.token_1.set_x_pos(2)
-        self.assertEqual(self.token_1.get_x_pos(), 2)
-    
-    def test_y_pos(self):
-        self.token_1.set_y_pos(4)
-        self.assertEqual(self.token_1.get_y_pos(), 4)
-
 class GridSmallTest(unittest.TestCase):
     def setUp(self):
         self.grid = Grid(3,3)
